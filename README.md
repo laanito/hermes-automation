@@ -35,4 +35,4 @@ Refresh that file from a live `git diff` when the hunk changes.
 
 ## Remote
 
-Private GitHub: `laanito/praderas-automation-hermes` (deploy key on the host).
+Private GitHub: `laanito/hermes-automation` (deploy key on the host).

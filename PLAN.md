@@ -7,8 +7,8 @@
 **Rooms**
 | Room | Token | Use |
 |------|-------|-----|
-| Automation Hermes | `4tr8ku3n` | Ops, NC content, digests, alerts |
-| Grok chat | `o6kof9p9` | Conversation + web search only |
+| Automation Hermes | `$TALK_ROOM_AUTOMATION` | Ops, NC content, digests, alerts |
+| Grok chat | `$TALK_ROOM_GROK` | Conversation + web search only |
 
 **Deliver:** `POST http://127.0.0.1:8788/deliver` with `Authorization: Bearer $TALK_DELIVER_SECRET` and JSON `{room_token, message, actor?}`. Helper: `bin/talk-deliver.sh`.
 
@@ -43,7 +43,7 @@ Script watches (no LLM log tailing). Silence on OK; post to Automation room on f
 
 ## P3 — Scheduled web research / digests ✅ done
 - [x] Prompt: `prompts/web-digest.md` (ES, skim-friendly, web/Exa)
-- [x] Runner: `bin/run-web-digest.sh` → `automation-run.sh --deliver` → room `4tr8ku3n`
+- [x] Runner: `bin/run-web-digest.sh` → `automation-run.sh --deliver` → room `$TALK_ROOM_AUTOMATION`
 - [x] Schedule: user crontab weekdays **08:15 Europe/Madrid**
 - [x] Log: `logs/web-digest.log`; failure also Talk-alerts
 - Edit topics in the prompt file; no free-form cron-from-Talk
