@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Cron-safe: user systemd needs XDG_RUNTIME_DIR; always require HTTP health.
 set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+if [[ -f "$ROOT/.env" ]]; then set -a; source "$ROOT/.env"; set +a; fi
 uid="$(id -u)"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$uid}"
 if [[ -S "$XDG_RUNTIME_DIR/bus" ]]; then
@@ -22,12 +24,16 @@ for url in http://127.0.0.1:8788/health http://127.0.0.1:8789/health; do
     fail=1
   fi
 done
-# also public paths
-for url in https://nube.praderas.org/hermes-talk/health https://nube.praderas.org/hermes-grok-chat/health; do
-  if ! curl -sf -m 10 "$url" >/dev/null; then
-    echo "ALERT: public health failed: $url"
-    fail=1
-  fi
-done
+base="${NEXTCLOUD_URL:-}"
+base="${base%/}"
+if [[ -n "$base" ]]; then
+  for path in /hermes-talk/health /hermes-grok-chat/health; do
+    url="$base$path"
+    if ! curl -sf -m 10 "$url" >/dev/null; then
+      echo "ALERT: public health failed: $url"
+      fail=1
+    fi
+  done
+fi
 if [[ $fail -ne 0 ]]; then exit 1; fi
 exit 0

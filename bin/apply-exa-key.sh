@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Sync EXA_API_KEY from secrets/exa.env into Hermes profile + bridge env (no value printed).
 set -euo pipefail
-SRC=/srv/praderas/automation-hermes/secrets/exa.env
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SRC="$ROOT/secrets/exa.env"
 if [[ ! -f "$SRC" ]]; then
   echo "missing $SRC" >&2
   exit 2
@@ -46,17 +47,17 @@ PY
 }
 
 apply_to "$HOME/.hermes/profiles/automation/.env"
-apply_to /srv/praderas/automation-hermes/.env
+apply_to "$ROOT/.env"
 # optional legacy docker-era home
-if [[ -f /srv/praderas/automation-hermes/hermes-home/.env ]]; then
-  apply_to /srv/praderas/automation-hermes/hermes-home/.env
+if [[ -f "$ROOT/hermes-home/.env" ]]; then
+  apply_to "$ROOT/hermes-home/.env"
 fi
 
 # bridge picks EnvironmentFile on restart
 systemctl --user restart nextcloud-talk-hermes-bridge.service
 # grok-chat may also want web; optional — only if its env has EXA
-if grep -q EXA /srv/praderas/automation-hermes/grok-chat.env 2>/dev/null; then
-  apply_to /srv/praderas/automation-hermes/grok-chat.env
+if grep -q EXA "$ROOT/grok-chat.env" 2>/dev/null; then
+  apply_to "$ROOT/grok-chat.env"
   systemctl --user restart nextcloud-talk-hermes-bridge-grok-chat.service || true
 fi
 systemctl --user is-active nextcloud-talk-hermes-bridge.service

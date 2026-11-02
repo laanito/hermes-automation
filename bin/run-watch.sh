@@ -2,7 +2,8 @@
 # run-watch.sh NAME -- command...
 # If command exits non-zero OR prints ALERT lines, deliver to Talk. Else silent.
 set -euo pipefail
-BASE=/srv/praderas/automation-hermes
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BASE="$ROOT"
 DELIVER="$BASE/bin/talk-deliver.sh"
 NAME="${1:-watch}"
 shift || true

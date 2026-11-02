@@ -14,7 +14,8 @@ if [[ -f "$HERMES_HOME/.env" ]]; then
   set +a
 fi
 
-BASE=/srv/praderas/automation-hermes
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BASE="$ROOT"
 PROMPT_FILE="${DIGEST_PROMPT:-$BASE/prompts/web-digest.md}"
 CONTEXT_SCRIPT="${DIGEST_CONTEXT_SCRIPT:-$BASE/bin/digest-local-context.sh}"
 LOG="$BASE/logs/web-digest.log"
@@ -40,7 +41,7 @@ TASK="$(printf '%s\n\n---\nSystem date (host): %s\n\n%s\n\n---\n%s\n' \
 
 {
   echo "==== $(date -Iseconds) start ===="
-  if /srv/praderas/automation-hermes/bin/automation-run.sh \
+  if "$ROOT/bin/automation-run.sh" \
       --deliver --result-only --actor "web-digest" --max-turns 35 \
       "$TASK"; then
     echo "ok"

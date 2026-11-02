@@ -6,6 +6,7 @@
 #   automation-run.sh --deliver --result-only "task"  # post result only
 #   automation-run.sh --max-turns N "task"
 set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 export PATH="${HOME}/.local/bin:${HOME}/.hermes/bin:/usr/bin:/bin:${PATH}"
 export HERMES_HOME="${HERMES_HOME:-$HOME/.hermes/profiles/automation}"
 
@@ -73,6 +74,6 @@ if [[ "$DELIVER" -eq 1 ]]; then
   else
     MSG="$(printf "Main→Automation task:\n%s\n\nResult (rc=%s):\n%s" "$TASK" "$rc" "$RESULT" | head -c 3500)"
   fi
-  /srv/praderas/automation-hermes/bin/talk-deliver.sh --actor "$ACTOR" "$MSG" || true
+  "$ROOT/bin/talk-deliver.sh" --actor "$ACTOR" "$MSG" || true
 fi
 exit "$rc"

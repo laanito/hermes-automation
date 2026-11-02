@@ -7,7 +7,8 @@
 #   talk-deliver.sh --actor "watch-disk" "Disk above 90%"
 set -euo pipefail
 
-ENV_FILE="${TALK_DELIVER_ENV:-/srv/praderas/automation-hermes/.env}"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ENV_FILE="${TALK_DELIVER_ENV:-$ROOT/.env}"
 if [[ -f "$ENV_FILE" ]]; then
   set -a
   # shellcheck disable=SC1090

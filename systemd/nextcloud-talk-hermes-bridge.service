@@ -5,10 +5,10 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=/srv/praderas/automation-hermes/bridge
-Environment=PATH=/home/lamigo/.local/bin:/home/lamigo/.hermes/bin:/usr/bin:/bin
-EnvironmentFile=/srv/praderas/automation-hermes/.env
-ExecStart=/srv/praderas/automation-hermes/bridge/.venv/bin/python -m nextcloud_talk_hermes_bridge.bridge
+WorkingDirectory=@OVERLAY_ROOT@/bridge
+Environment=PATH=%h/.local/bin:%h/.hermes/bin:/usr/bin:/bin
+EnvironmentFile=@OVERLAY_ROOT@/.env
+ExecStart=@OVERLAY_ROOT@/bridge/.venv/bin/python -m nextcloud_talk_hermes_bridge.bridge
 Restart=always
 RestartSec=5
 

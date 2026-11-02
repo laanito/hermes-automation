@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# Local status via nginx or loopback NC
-code="$(curl -sS -o /tmp/nc-status.json -w "%{http_code}" -m 10 https://nube.praderas.org/status.php || echo 000)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+if [[ -f "$ROOT/.env" ]]; then set -a; source "$ROOT/.env"; set +a; fi
+NC_URL="${NEXTCLOUD_URL:?NEXTCLOUD_URL missing in overlay .env}"
+NC_URL="${NC_URL%/}"
+code="$(curl -sS -o /tmp/nc-status.json -w "%{http_code}" -m 10 "$NC_URL/status.php" || echo 000)"
 if [[ "$code" != "200" ]]; then
   echo "ALERT: Nextcloud status.php HTTP $code"
   cat /tmp/nc-status.json 2>/dev/null || true

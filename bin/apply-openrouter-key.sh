@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Sync OPENROUTER_API_KEY from secrets/openrouter.env into automation profile + bridge env.
 set -euo pipefail
-SRC=/srv/praderas/automation-hermes/secrets/openrouter.env
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SRC="$ROOT/secrets/openrouter.env"
 set -a
 # shellcheck disable=SC1090
 source "$SRC"
@@ -34,8 +35,8 @@ PY
 }
 
 apply_to "$HOME/.hermes/profiles/automation/.env"
-apply_to /srv/praderas/automation-hermes/.env
-[[ -f /srv/praderas/automation-hermes/hermes-home/.env ]] && apply_to /srv/praderas/automation-hermes/hermes-home/.env || true
+apply_to "$ROOT/.env"
+[[ -f "$ROOT/hermes-home/.env" ]] && apply_to "$ROOT/hermes-home/.env" || true
 
 systemctl --user restart nextcloud-talk-hermes-bridge.service
 systemctl --user is-active nextcloud-talk-hermes-bridge.service

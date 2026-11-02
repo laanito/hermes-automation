@@ -8,7 +8,8 @@ export PATH="${HOME}/.local/bin:/usr/bin:/bin"
 export GIT_TERMINAL_PROMPT=0
 FETCH_TIMEOUT="${HERMES_UPDATE_FETCH_TIMEOUT:-40}"
 
-BASE=/srv/praderas/automation-hermes
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BASE="$ROOT"
 HERMES_SRC="${HERMES_SRC:-${HOME}/.hermes/hermes-agent}"
 BRIDGE_SRC="${BRIDGE_SRC:-${BASE}/bridge}"
 STATE="${HERMES_UPDATE_STATE:-${BASE}/data/hermes-update.state}"
@@ -142,7 +143,7 @@ if [[ "$hermes_behind" -eq 1 || "$bridge_behind" -eq 1 ]]; then
   fi
   echo "Apply from SSH when ready: hermes update --plan && hermes update --backup"
   echo "Then: systemctl --user restart nextcloud-talk-hermes-bridge nextcloud-talk-hermes-bridge-grok-chat"
-  echo "See skill praderas-automation-hermes / references/hermes-updates.md"
+  echo "See overlay PLAN.md (Hermes updates: alert only)"
   save_state "${hermes_remote:-}" "${bridge_remote:-}" "$now"
   fail=1
 fi

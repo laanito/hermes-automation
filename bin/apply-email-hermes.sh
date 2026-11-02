@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# On praderas-new: after mailbox exists, set EMAIL_PASSWORD and start email gateway.
+# After the mailbox exists: set EMAIL_PASSWORD and start the email gateway.
 set -euo pipefail
 export PATH="${HOME}/.local/bin:${PATH}"
 PROF_ENV="${HOME}/.hermes/profiles/email/.env"
-SECRETS="/srv/praderas/automation-hermes/secrets/email-hermes.env"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SECRETS="$ROOT/secrets/email-hermes.env"
 
 if [[ ! -f "$PROF_ENV" ]]; then
   echo "missing $PROF_ENV — create email profile first" >&2
@@ -51,11 +52,10 @@ python3 - "$SECRETS" "$PASS" <<'PY'
 from pathlib import Path
 import sys
 p, pw = Path(sys.argv[1]), sys.argv[2]
-p.write_text(
-  "EMAIL_ADDRESS=hermes@praderas.org\n"
-  f"EMAIL_PASSWORD={pw}\n"
-  "EMAIL_ALLOWED_USERS=lamigo@praderas.org,lamigo@praderas.es\n"
-)
+text = p.read_text() if p.exists() else ""
+lines = [ln for ln in text.splitlines() if not ln.startswith("EMAIL_PASSWORD=")]
+lines.append(f"EMAIL_PASSWORD={pw}")
+p.write_text("\n".join(lines) + "\n")
 p.chmod(0o600)
 print("secrets file updated", p)
 PY

@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
-# Deploy praderasblog Pico site: ff-only git pull on the live tree + HTTP checks.
+# Deploy the Pico blog: ff-only git pull on the live tree + HTTP checks.
 # Safe ops only — no push, no force, no reset, no config edits.
 set -euo pipefail
 
-PICO="${PRADERAS_PICO:-/srv/praderas/pico}"
-BRANCH="${PRADERAS_BLOG_BRANCH:-main}"
-REMOTE="${PRADERAS_BLOG_REMOTE:-origin}"
-SITE="${PRADERAS_BLOG_URL:-https://blog.praderas.org}"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+if [[ -f "$ROOT/.env" ]]; then set -a
+  # shellcheck disable=SC1091
+  source "$ROOT/.env"; set +a
+fi
+PICO="${BLOG_PICO:-}"
+BRANCH="${BLOG_BRANCH:-main}"
+REMOTE="${BLOG_REMOTE:-origin}"
+SITE="${BLOG_URL:-}"
+if [[ -z "$PICO" || -z "$SITE" ]]; then
+  echo "blog-deploy: set BLOG_PICO and BLOG_URL in overlay .env" >&2
+  exit 2
+fi
 
 # GitHub HTTP/2: unauthenticated POST /git-upload-pack returns 401.
 # HTTP/1.1 works for public clone/fetch without credentials.
