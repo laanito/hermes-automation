@@ -6,7 +6,8 @@ logs/
 data/
 hermes-home/
 hermes/
-bridge/
+bridge/.venv/
+bridge/.env
 *.bak
 *.bak-*
 __pycache__/
