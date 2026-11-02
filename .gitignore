@@ -1,0 +1,14 @@
+# secrets and runtime — never commit
+.env
+grok-chat.env
+secrets/
+logs/
+data/
+hermes-home/
+hermes/
+bridge/
+*.bak
+*.bak-*
+__pycache__/
+.venv/
+.DS_Store

@@ -1,0 +1,27 @@
+diff --git a/toolsets.py b/toolsets.py
+index 0918c4696..6e362291f 100644
+--- a/toolsets.py
++++ b/toolsets.py
+@@ -469,8 +469,20 @@ def profile_role_toolsets(profile_home: Optional[Path] = None) -> Tuple[Set[str]
+ 
+ 
+ def validate_toolset(name: str) -> bool:
+-    return (name in {"all", "*"} or name in TOOLSETS
+-            or name in _get_plugin_toolset_names() or name in _get_registry_toolset_aliases())
++    if name in {"all", "*"} or name in TOOLSETS:
++        return True
++    if name in _get_plugin_toolset_names() or name in _get_registry_toolset_aliases():
++        return True
++    # Plugin toolsets (e.g. web-search-plus) may only be in the live registry
++    # after discover_plugins(). CLI validates toolsets earlier; accept the
++    # persisted/cache keys so we don't warn on legitimate plugin toolsets.
++    try:
++        from hermes_cli.plugins import get_plugin_toolset_keys_nowait
++        if name in get_plugin_toolset_keys_nowait():
++            return True
++    except Exception:
++        pass
++    return False
+ 
+ 
+ def create_custom_toolset(name: str, description: str, tools: List[str] = None, includes: List[str] = None) -> None:

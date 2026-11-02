@@ -1,0 +1,10 @@
+# Automation Hermes watches (user crontab, lamigo)
+SHELL=/bin/bash
+PATH=/home/lamigo/.local/bin:/usr/bin:/bin
+BASE=/srv/praderas/automation-hermes
+*/10 * * * * $BASE/bin/run-watch.sh bridges -- $BASE/watches/check-bridges.sh >>$BASE/logs/watches.log 2>&1
+3-59/10 * * * * $BASE/bin/run-watch.sh nextcloud -- $BASE/watches/check-nextcloud.sh >>$BASE/logs/watches.log 2>&1
+17 * * * * $BASE/bin/run-watch.sh disk -- $BASE/watches/check-disk.sh >>$BASE/logs/watches.log 2>&1
+30 9 * * * TZ=Europe/Madrid $BASE/bin/run-watch.sh hermes-update -- $BASE/watches/check-hermes-update.sh >>$BASE/logs/watches.log 2>&1
+TZ=Europe/Madrid
+15 8 * * 1-5 /srv/praderas/automation-hermes/bin/run-web-digest.sh

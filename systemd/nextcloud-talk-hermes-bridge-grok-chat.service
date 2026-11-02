@@ -1,0 +1,16 @@
+[Unit]
+Description=Nextcloud Talk Hermes Bridge (Grok Chat)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/srv/praderas/automation-hermes/bridge
+Environment=PATH=/home/lamigo/.local/bin:/home/lamigo/.hermes/bin:/usr/bin:/bin
+EnvironmentFile=/srv/praderas/automation-hermes/grok-chat.env
+ExecStart=/srv/praderas/automation-hermes/bridge/.venv/bin/python -m nextcloud_talk_hermes_bridge.bridge
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
